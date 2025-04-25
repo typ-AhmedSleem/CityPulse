@@ -8,13 +8,18 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.transitions.SlideTransition
+import com.typ.citypulse.R
 import com.typ.citypulse.UserRole
 import com.typ.citypulse.ui.theme.CityPulseTheme
 import com.typ.citypulse.ui.utils.getHomeScreenForCurrentRole
+import io.github.alexzhirkevich.cupertino.CupertinoNavigateBackButton
 import io.github.alexzhirkevich.cupertino.CupertinoScaffold
+import io.github.alexzhirkevich.cupertino.CupertinoText
+import io.github.alexzhirkevich.cupertino.CupertinoTopAppBar
 import io.github.alexzhirkevich.cupertino.ExperimentalCupertinoApi
 
 @OptIn(ExperimentalCupertinoApi::class)
@@ -26,7 +31,22 @@ fun CityPulseApp() {
 
     CityPulseTheme {
         CupertinoScaffold(
-
+            topBar = {
+                CupertinoTopAppBar(
+                    title = {
+                        CupertinoText(
+                            text = stringResource(R.string.app_name)
+                        )
+                    },
+                    navigationIcon = {
+                        CupertinoNavigateBackButton(
+                            onClick = { navigator?.pop() }
+                        ) {
+                            CupertinoText(stringResource(R.string.back))
+                        }
+                    }
+                )
+            }
         ) { deviceInsetPaddings ->
             Navigator(
                 screen = getHomeScreenForCurrentRole(userRole)
