@@ -1,6 +1,7 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import java.util.Properties
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -9,6 +10,7 @@ plugins {
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.ksp)
     alias(libs.plugins.room)
+    alias(libs.plugins.kotlinxSerialization)
 }
 
 kotlin {
@@ -36,6 +38,8 @@ kotlin {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
             implementation(libs.play.services.location)
+            implementation(libs.generativeai)
+            implementation (libs.jetpack.loading)
 //            implementation(libs.coil.compose)
 //            implementation(libs.coil.network.okhttp)
         }
@@ -68,6 +72,15 @@ kotlin {
         }
     }
 }
+
+// * Load the local.properties file
+val localProperties = rootProject.file("local.properties")
+val properties = Properties().apply {
+    load(localProperties.inputStream())
+}
+
+// Get the API key
+val geminiApiKey: String = properties.getProperty("GEMINI_API_KEY", "")
 
 android {
     namespace = "com.typ.citypulse"
