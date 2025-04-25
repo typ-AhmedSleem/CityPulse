@@ -1,5 +1,6 @@
 package com.typ.citypulse.ui
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
@@ -14,6 +15,8 @@ import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.transitions.SlideTransition
 import com.typ.citypulse.R
 import com.typ.citypulse.UserRole
+import com.typ.citypulse.ui.screens.BaseHomeScreen
+import com.typ.citypulse.ui.screens.UserRoleHomeScreen
 import com.typ.citypulse.ui.theme.CityPulseTheme
 import com.typ.citypulse.ui.utils.getHomeScreenForCurrentRole
 import io.github.alexzhirkevich.cupertino.CupertinoNavigateBackButton
@@ -39,10 +42,14 @@ fun CityPulseApp() {
                         )
                     },
                     navigationIcon = {
-                        CupertinoNavigateBackButton(
-                            onClick = { navigator?.pop() }
+                        AnimatedVisibility(
+                            visible = currentScreen !is BaseHomeScreen,
                         ) {
-                            CupertinoText(stringResource(R.string.back))
+                            CupertinoNavigateBackButton(
+                                onClick = { navigator?.pop() }
+                            ) {
+                                CupertinoText(stringResource(R.string.back))
+                            }
                         }
                     }
                 )
