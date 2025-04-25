@@ -19,6 +19,7 @@ import com.typ.citypulse.ui.screens.BaseHomeScreen
 import com.typ.citypulse.ui.screens.UserRoleHomeScreen
 import com.typ.citypulse.ui.theme.CityPulseTheme
 import com.typ.citypulse.ui.utils.getHomeScreenForCurrentRole
+import com.typ.citypulse.ui.utils.previewContainerPaddings
 import io.github.alexzhirkevich.cupertino.CupertinoNavigateBackButton
 import io.github.alexzhirkevich.cupertino.CupertinoScaffold
 import io.github.alexzhirkevich.cupertino.CupertinoText
@@ -63,6 +64,7 @@ fun CityPulseApp() {
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(deviceInsetPaddings)
+                        .previewContainerPaddings(8)
                 )
 
                 navigator = nav
