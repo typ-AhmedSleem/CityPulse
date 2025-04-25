@@ -6,4 +6,6 @@
     <string name="placeholder_additional_text_for_scene">Provide short description to be included with the scene…</string>
     <string name="analyzing_scene">Analyzing scene…</string>
     <string name="msg_analyze_scene">Our AI is analyzing scene you captured!\nThanks for you patience..</string>
+    <string name="analyze_scene_result">Analyze Scene Result</string>
+    <string name="mock_analyze_scene_response">A large crack in the road on Main Street is wide and deep, preventing cars from passing safely. The issue has been reported by multiple drivers, with some vehicles getting stuck. The road is heavily used by commuters, and the crack has been present for approximately five days.</string>
 </resources>

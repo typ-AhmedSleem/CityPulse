@@ -193,7 +193,7 @@ class CRCaptureSceneScreen : Screen {
     @Composable
     private fun loadImageFromUri(imageUri: Uri): Painter {
         val mocks = remember { listOf(R.drawable.sample_img_1, R.drawable.sample_img_2) }
-        return if (usingMocks) painterResource(mocks.random())
+        return if (usingMocks) painterResource(R.drawable.sample_img_1)
         else throw NotImplementedError()
     }
 
