@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="back">Back</string>
+    <string name="recent_reports">Recent Reports</string>
+    <string name="click_btn_to_create_report">Create a new report by clicking the button below</string>
 </resources>
