@@ -6,12 +6,15 @@ import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts.TakePicture
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -29,14 +32,19 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.core.content.FileProvider
 import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.navigator.LocalNavigator
 import com.typ.citypulse.R
+import com.typ.citypulse.ui.components.SceneAdditionalDescriptionInput
 import com.typ.citypulse.ui.utils.PreviewContainer
 import com.typ.citypulse.usingMocks
 import io.github.alexzhirkevich.cupertino.CupertinoButton
+import io.github.alexzhirkevich.cupertino.CupertinoButtonDefaults
 import io.github.alexzhirkevich.cupertino.CupertinoText
 import io.github.alexzhirkevich.cupertino.theme.CupertinoTheme
 import java.io.File
@@ -48,12 +56,13 @@ class CRCaptureSceneScreen : Screen {
     @Composable
     override fun Content() {
         // * Runtime
+        val navigator = LocalNavigator.current
         val context = LocalContext.current
         val scope = rememberCoroutineScope()
 
-        // Temp file + URI
-        var imageUri by remember { mutableStateOf<Uri?>(Uri.parse("")) }
+        val additionalText = remember { mutableStateOf("") }
         var imageCaptured by remember { mutableStateOf(false) }
+        var imageUri by remember { mutableStateOf<Uri?>(Uri.parse("")) }
 
         // Create a launcher that launches native camera
         val captureImageLauncher = rememberLauncherForActivityResult(TakePicture()) { success ->
@@ -77,21 +86,70 @@ class CRCaptureSceneScreen : Screen {
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            CupertinoButton(
-                onClick = {
+            AnimatedVisibility(imageCaptured) {
+                Column(modifier = Modifier.fillMaxWidth()) {
+                    SceneAdditionalDescriptionInput(
+                        modifier = Modifier.fillMaxWidth(),
+                        text = additionalText,
+                    )
+
+                    Spacer(modifier = Modifier.height(24.dp))
+                }
+            }
+
+            AnimatedContent(
+                targetState = imageCaptured,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(48.dp)
+            ) { captured ->
+                if (captured) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth(0.95f)
+                            .fillMaxHeight(),
+                        horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.CenterHorizontally),
+
+                        ) {
+                        CupertinoButton(
+                            onClick = {
+                                navigator?.push(CRAnalyzeSceneScreen())
+                            },
+                            modifier = Modifier
+                                .weight(1f)
+                                .fillMaxHeight()
+                        ) {
+                            CupertinoText("Analyze scene")
+                        }
+                        CupertinoButton(
+                            colors = CupertinoButtonDefaults.grayButtonColors(),
+                            onClick = {
+                                imageCaptured = false
+                            },
+                            modifier = Modifier
+                                .weight(1f)
+                                .fillMaxHeight()
+                        ) {
+                            CupertinoText("Retake Image")
+                        }
+                    }
+                } else {
+                    CupertinoButton(
+                        onClick = {
 //                    val uri = createImageUri(context)
 //                    imageUri = uri
 //                    captureImageLauncher.launch(uri)
-                    if (!imageCaptured) {
-                        imageCaptured = true
-
+                            if (!imageCaptured) {
+                                imageCaptured = true
+                            }
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth(0.95f)
+                            .fillMaxHeight()
+                    ) {
+                        CupertinoText("Capture Image")
                     }
-                },
-                modifier = Modifier
-                    .fillMaxWidth(0.95f)
-                    .height(56.dp)
-            ) {
-                CupertinoText("Capture Image")
+                }
             }
         }
     }
@@ -109,7 +167,18 @@ class CRCaptureSceneScreen : Screen {
                 .background(CupertinoTheme.colorScheme.secondarySystemBackground)
         ) { captured ->
             if (!captured) {
-                Box(modifier = Modifier.fillMaxWidth()) { }
+                Box(
+                    modifier = Modifier.fillMaxWidth(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CupertinoText(
+                        lineHeight = 32.sp,
+                        textAlign = TextAlign.Center,
+                        text = "Capture an image\nto be analyzed",
+                        style = CupertinoTheme.typography.title2,
+                        color = CupertinoTheme.colorScheme.secondaryLabel
+                    )
+                }
             } else {
                 Image(
                     modifier = Modifier.fillMaxWidth(),
@@ -123,9 +192,9 @@ class CRCaptureSceneScreen : Screen {
 
     @Composable
     private fun loadImageFromUri(imageUri: Uri): Painter {
-        return if (usingMocks) {
-            painterResource(R.drawable.sample_img_1)
-        } else throw NotImplementedError()
+        val mocks = remember { listOf(R.drawable.sample_img_1, R.drawable.sample_img_2) }
+        return if (usingMocks) painterResource(mocks.random())
+        else throw NotImplementedError()
     }
 
     private fun createImageUri(context: Context): Uri {

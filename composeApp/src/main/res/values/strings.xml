@@ -3,4 +3,5 @@
     <string name="back">Back</string>
     <string name="recent_reports">Recent Reports</string>
     <string name="click_btn_to_create_report">Create a new report by clicking the button below</string>
+    <string name="placeholder_additional_text_for_scene">Provide short description to be included with the scene…</string>
 </resources>
