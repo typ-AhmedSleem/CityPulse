@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.result.contract.ActivityResultContracts.TakePicture
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.Image
@@ -36,13 +35,13 @@ import androidx.core.content.FileProvider
 import cafe.adriel.voyager.core.screen.Screen
 import com.typ.citypulse.R
 import com.typ.citypulse.ui.utils.PreviewContainer
+import com.typ.citypulse.usingMocks
 import io.github.alexzhirkevich.cupertino.CupertinoButton
 import io.github.alexzhirkevich.cupertino.CupertinoText
 import io.github.alexzhirkevich.cupertino.theme.CupertinoTheme
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date
-import java.util.Objects
 
 class CRCaptureSceneScreen : Screen {
 
@@ -80,9 +79,13 @@ class CRCaptureSceneScreen : Screen {
 
             CupertinoButton(
                 onClick = {
-                    val uri = createImageUri(context)
-                    imageUri = uri
-                    captureImageLauncher.launch(uri)
+//                    val uri = createImageUri(context)
+//                    imageUri = uri
+//                    captureImageLauncher.launch(uri)
+                    if (!imageCaptured) {
+                        imageCaptured = true
+
+                    }
                 },
                 modifier = Modifier
                     .fillMaxWidth(0.95f)
@@ -96,7 +99,7 @@ class CRCaptureSceneScreen : Screen {
     @Composable
     fun CapturedImageViewer(
         modifier: Modifier = Modifier,
-        imageCaptured : Boolean,
+        imageCaptured: Boolean,
         imageUri: Uri?,
     ) {
         AnimatedContent(
@@ -120,7 +123,9 @@ class CRCaptureSceneScreen : Screen {
 
     @Composable
     private fun loadImageFromUri(imageUri: Uri): Painter {
-        return painterResource(R.drawable.ic_launcher_background)
+        return if (usingMocks) {
+            painterResource(R.drawable.sample_img_1)
+        } else throw NotImplementedError()
     }
 
     private fun createImageUri(context: Context): Uri {
