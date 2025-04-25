@@ -123,7 +123,7 @@ class CRAnalyzeSceneScreen : Screen {
                             .fillMaxWidth(0.95f)
                             .height(48.dp)
                     ) {
-                        CupertinoText("Capture Image")
+                        CupertinoText("Proceed to Location")
                     }
                 }
 
